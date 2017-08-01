@@ -205,7 +205,8 @@ class UserManager(AbstractUserManager):
                 infos = method.get_users_info(remaining_users)
                 if infos is not None:
                     for user, val in infos.items():
-                        retval[user] = val
+                        if val is not None:
+                            retval[user] = val
 
         remaining_users = [username for username, val in retval.items() if val is None]
         if len(remaining_users) == 0:

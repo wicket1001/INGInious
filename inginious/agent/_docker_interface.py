@@ -20,8 +20,8 @@ class DockerInterface(object):
 
     @property
     def _docker(self):
-        return docker.Client(**kwargs_from_env())
-    
+        return docker.from_env()
+
     def get_containers(self):
         """
         :return: a dict of available containers in the form
@@ -34,8 +34,9 @@ class DockerInterface(object):
         """
 
         # First, create a dict with {"id": {"title": "alias", "created": 000}}
-        images = {x['Id']: {"title": x['Labels']["org.inginious.grading.name"], "created": int(x['Created'])}
-                  for x in self._docker.images(filters={"label": "org.inginious.grading.name"})}
+        images = {
+        x.attrs['Id']: {"title": x.attrs['Labels']["org.inginious.grading.name"], "created": int(x.attrs['Created'])}
+        for x in self._docker.images.list(filters={"label": "org.inginious.grading.name"})}
 
         # Then, we keep only the last version of each name
         latest = {}
@@ -61,8 +62,8 @@ class DockerInterface(object):
                         }
                 }
         """
-        images = {x['Id']: {"title": x['Labels']["org.inginious.batch.name"], "created": int(x['Created']), "labels": x['Labels']}
-                  for x in self._docker.images(filters={"label": "org.inginious.batch.name"})}
+        images = {x['Id']: {"title": x.attrs['Labels']["org.inginious.batch.name"], "created": int(x.attrs['Created']), "labels": x.attrs['Labels']}
+                  for x in self._docker.images.list(filters={"label": "org.inginious.batch.name"})}
 
         # Then, we keep only the last version of each name
         latest = {}
@@ -119,10 +120,13 @@ class DockerInterface(object):
         :param env_with_dig: any container image that has dig
         """
         try:
-            response = self._docker.create_container(env_with_dig, command="dig +short myip.opendns.com @resolver1.opendns.com")
-            self._docker.start(response['Id'])
-            assert self._docker.wait(response['Id']) == 0
-            return self._docker.logs(response['Id'], stdout=True, stderr=False).decode('utf8').strip()
+            response = self._docker.containers.create(env_with_dig,
+                                                      command="dig +short myip.opendns.com @resolver1.opendns.com")
+            response.start()
+            assert response.wait() == 0
+            answer = response.logs(stdout=True, stderr=False).decode('utf8').strip()
+            response.remove(v=True, link=False, force=True)
+            return answer
         except:
             return None
 
@@ -141,45 +145,21 @@ class DockerInterface(object):
         task_path = os.path.abspath(task_path)
         sockets_path = os.path.abspath(sockets_path)
 
-        response = self._docker.create_container(
+        response = self._docker.containers.create(
             environment,
             stdin_open=True,
-            ports=[22] if ssh_port is not None else [],
-            volumes=['/task', '/sockets'],
-            host_config=self._docker.create_host_config(
-                mem_limit=str(mem_limit) + "M",
-                memswap_limit=str(mem_limit) + "M",
-                mem_swappiness=0,
-                oom_kill_disable=True,
-                network_mode=("bridge" if (network_grading or ssh_port is not None) else 'none'),
-                binds={task_path: {'bind': '/task'},
-                       sockets_path: {'bind': '/sockets'}},
-                port_bindings={22: ssh_port} if ssh_port is not None else {}
-            )
+            mem_limit=str(mem_limit) + "M",
+            memswap_limit=str(mem_limit) + "M",
+            mem_swappiness=0,
+            oom_kill_disable=True,
+            network_mode=("bridge" if (network_grading or ssh_port is not None) else 'none'),
+            ports={22: ssh_port} if ssh_port is not None else {},
+            volumes={task_path: {'bind': '/task'}, sockets_path: {'bind': '/sockets'}}
         )
-        return response["Id"]
+        return response.id
 
-    def create_batch_container(self, environment, input_path, output_path):
-        """
-        Creates a batch container
-        :param environment: env to start (name/id of a docker image)
-        :param input_path: path to the input folder
-        :param output_path: path to the output folder
-        :return: the container id
-        """
-        input_path = os.path.abspath(input_path)
-        output_path = os.path.abspath(output_path)
-
-        response = self._docker.create_container(
-            environment,
-            volumes=['/input', '/output'],
-            host_config=self._docker.create_host_config(
-                binds={input_path: {'bind': '/input'}, output_path: {'bind': '/output'}},
-            )
-        )
-        return response["Id"]
-
-    def create_container_student(self, parent_container_id, environment, network_grading, mem_limit, student_path, socket_path, systemfiles_path):
+    def create_container_student(self, parent_container_id, environment, network_grading, mem_limit, student_path,
+                                 socket_path, systemfiles_path):
         """
         Creates a student container
         :param parent_container_id: id of the "parent" container
@@ -195,32 +175,29 @@ class DockerInterface(object):
         socket_path = os.path.abspath(socket_path)
         systemfiles_path = os.path.abspath(systemfiles_path)
 
-        response = self._docker.create_container(
+        response = self._docker.containers.create(
             environment,
             stdin_open=True,
-            volumes=['/task/student', '/__parent.sock', '/task/systemfiles'],
             command="_run_student_intern",
-            host_config=self._docker.create_host_config(
-                mem_limit=str(mem_limit) + "M",
-                memswap_limit=str(mem_limit) + "M",
-                mem_swappiness=0,
-                oom_kill_disable=True,
-                network_mode=('none' if not network_grading else ('container:' + parent_container_id)),
-                binds={student_path: {'bind': '/task/student'},
-                       socket_path: {'bind': '/__parent.sock'},
-                       systemfiles_path: {'bind': '/task/systemfiles', 'mode': 'ro'}}
-            )
+            mem_limit=str(mem_limit) + "M",
+            memswap_limit=str(mem_limit) + "M",
+            mem_swappiness=0,
+            oom_kill_disable=True,
+            network_mode=('none' if not network_grading else ('container:' + parent_container_id)),
+            volumes={student_path: {'bind': '/task/student'},
+                     socket_path: {'bind': '/__parent.sock'},
+                     systemfiles_path: {'bind': '/task/systemfiles', 'mode': 'ro'}}
         )
-        return response["Id"]
+        return response.id
 
     def start_container(self, container_id):
         """ Starts a container (obviously) """
-        self._docker.start(container_id)
+        self._docker.containers.get(container_id).start()
 
     def attach_to_container(self, container_id):
         """ A socket attached to the stdin/stdout of a container. The object returned contains a get_socket() function to get a socket.socket
         object and  close_socket() to close the connection """
-        sock = self._docker.attach_socket(container_id, {
+        sock = self._docker.containers.get(container_id).attach_socket(params={
             'stdin': 1,
             'stdout': 1,
             'stderr': 0,
@@ -231,8 +208,8 @@ class DockerInterface(object):
 
     def get_logs(self, container_id):
         """ Return the full stdout/stderr of a container"""
-        stdout = self._docker.logs(container_id, stdout=True, stderr=False).decode('utf8')
-        stderr = self._docker.logs(container_id, stdout=False, stderr=True).decode('utf8')
+        stdout = self._docker.containers.get(container_id).logs(stdout=True, stderr=False).decode('utf8')
+        stderr = self._docker.containers.get(container_id).logs(stdout=False, stderr=True).decode('utf8')
         return stdout, stderr
 
     def get_stats(self, container_id):
@@ -240,20 +217,20 @@ class DockerInterface(object):
         :param container_id:
         :return: an iterable that contains dictionnaries with the stats of the running container. See the docker api for content.
         """
-        return self._docker.stats(container_id, decode=True)
+        return self._docker.containers.get(container_id).stats(decode=True)
 
     def remove_container(self, container_id):
         """
         Removes a container (with fire)
         """
-        self._docker.remove_container(container_id, True, False, True)
+        self._docker.containers.get(container_id).remove(v=True, link=False, force=True)
 
     def kill_container(self, container_id, signal=None):
         """
         Kills a container
         :param signal: custom signal. Default is SIGKILL.
         """
-        self._docker.kill(container_id, signal)
+        self._docker.containers.get(container_id).kill(signal)
 
     def event_stream(self, filters=None):
         """

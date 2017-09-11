@@ -8,9 +8,8 @@
 """
 import os
 import re
-
 import docker
-from docker.utils import kwargs_from_env
+from datetime import datetime
 
 
 class DockerInterface(object):
@@ -35,7 +34,8 @@ class DockerInterface(object):
 
         # First, create a dict with {"id": {"title": "alias", "created": 000}}
         images = {
-        x.attrs['Id']: {"title": x.attrs['Labels']["org.inginious.grading.name"], "created": int(x.attrs['Created'])}
+        x.attrs['Id']: {"title": x.labels["org.inginious.grading.name"],
+                        "created": datetime.strptime(x.attrs['Created'][:-4], "%Y-%m-%dT%H:%M:%S.%f").timestamp()}
         for x in self._docker.images.list(filters={"label": "org.inginious.grading.name"})}
 
         # Then, we keep only the last version of each name
@@ -62,7 +62,9 @@ class DockerInterface(object):
                         }
                 }
         """
-        images = {x['Id']: {"title": x.attrs['Labels']["org.inginious.batch.name"], "created": int(x.attrs['Created']), "labels": x.attrs['Labels']}
+        images = {x['Id']: {"title": x.labels["org.inginious.batch.name"],
+                            "created": datetime.strptime(x.attrs['Created'][:-4], "%Y-%m-%dT%H:%M:%S.%f").timestamp(),
+                            "labels": x.labels}
                   for x in self._docker.images.list(filters={"label": "org.inginious.batch.name"})}
 
         # Then, we keep only the last version of each name

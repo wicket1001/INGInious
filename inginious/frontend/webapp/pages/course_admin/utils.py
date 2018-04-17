@@ -77,7 +77,9 @@ class INGIniousSubmissionAdminPage(INGIniousAdminPage):
             # Tweak if not using classrooms : classroom['students'] may content ungrouped users
             aggregations = dict([(username,
                                   aggregation if course.use_classrooms() or (
-                                      username in aggregation['groups'][0]["students"]) else None
+                                      len(aggregation['groups']) and
+                                      username in aggregation['groups'][0]["students"]
+                                  ) else None
                                   ) for aggregation in aggregations for username in users])
 
         else:
@@ -88,7 +90,9 @@ class INGIniousSubmissionAdminPage(INGIniousAdminPage):
             # Tweak if not using classrooms : classroom['students'] may content ungrouped users
             aggregations = dict([(username,
                                   aggregation if course.use_classrooms() or (
-                                  username in aggregation['groups'][0]["students"]) else None
+                                      len(aggregation['groups']) and
+                                      username in aggregation['groups'][0]["students"]
+                                  ) else None
                                   ) for aggregation in aggregations for username in aggregation["students"]])
 
         if stype == "single":

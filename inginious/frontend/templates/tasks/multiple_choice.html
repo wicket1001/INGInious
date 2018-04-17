@@ -7,6 +7,7 @@ $#
 <div id="task_alert_$pid" class="task_alert_problem"></div>
 $:header
 $for choice in choices:
+    <div id="task_alert_$(pid)_$choice['index']" class="task_alert_problem"></div>
     $if checkbox:
         <div class="checkbox">
             <label>

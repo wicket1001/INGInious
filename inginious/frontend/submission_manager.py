@@ -352,7 +352,7 @@ class WebAppSubmissionManager:
             submission["input"] = inp
             return submission
 
-    def get_feedback_from_submission(self, submission, only_feedback=False, show_everything=False, translation=gettext.NullTranslations()):
+    def get_feedback_from_submission(self, task, submission, only_feedback=False, show_everything=False, translation=gettext.NullTranslations()):
         """
             Get the input of a submission. If only_input is False, returns the full submissions with a dictionnary object at the key "input".
             Else, returns only the dictionnary.
@@ -364,15 +364,21 @@ class WebAppSubmissionManager:
         if "text" in submission:
             submission["text"] = ParsableText(submission["text"], submission["response_type"], show_everything, translation).parse()
         if "problems" in submission:
-            for problem in submission["problems"]:
-                if isinstance(submission["problems"][problem], str):  # fallback for old-style submissions
-                    submission["problems"][problem] = (submission.get('result', 'crash'), ParsableText(submission["problems"][problem],
-                                                                                                       submission["response_type"],
-                                                                                                       show_everything, translation).parse())
+            task_problems = {problem.get_id(): problem for problem in task.get_problems()}
+            for pid in submission["problems"]:
+                problem = task_problems.get(pid, None)
+                if isinstance(submission["problems"][pid], str):  # fallback for old-style submissions
+                    submission["problems"][pid] = (submission.get('result', 'crash'), problem.prepare_feedback(
+                        submission["problems"][pid],
+                        show_everything,
+                        translation
+                    ) if problem else submission["problems"][pid])
                 else:  # new-style submission
-                    submission["problems"][problem] = (submission["problems"][problem][0], ParsableText(submission["problems"][problem][1],
-                                                                                                        submission["response_type"],
-                                                                                                        show_everything, translation).parse())
+                    submission["problems"][pid] = (submission["problems"][pid][0], problem.prepare_feedback(
+                        submission["problems"][pid][1],
+                        show_everything,
+                        translation
+                    ) if problem else submission["problems"][pid])
         return submission
 
     def is_running(self, submissionid, user_check=True):

@@ -7,27 +7,31 @@ $#
 
 <div class="form-group">
     <label for="name" class="col-sm-2 control-label">Name</label>
-    <div class="col-sm-7">
-        <input type="text" class="form-control" id="name" name="name" placeholder="title for this task" value="${task_data.get('name','')}">
-    </div>
-    <div class="col-sm-3">
-        <button type="button" data-toggle="modal" data-target="#delete_modal" class="btn btn-block btn-danger">
-            <i class="fa fa-trash"></i> $:_("Delete task")
-        </button>
+    <div class="row">
+        <div class="col-sm-7">
+            <input type="text" class="form-control" id="name" name="name" placeholder="title for this task" value="${task_data.get('name','')}">
+        </div>
+        <div class="col-sm-3">
+            <button type="button" data-toggle="modal" data-target="#delete_modal" class="btn btn-block btn-danger">
+                <i class="fa fa-trash"></i> $:_("Delete task")
+            </button>
+        </div>
     </div>
 
 </div>
 $if len(available_filetypes) != 1:
     <div class="form-group">
         <label for="name" class="col-sm-2 control-label">$:_("Filetype")</label>
-        <div class="col-sm-10">
-            <select class="form-control" id="@filetype" name="@filetype">
-                $for type in available_filetypes:
-                    <option value="$type"
-                        $if type == current_filetype or (current_filetype is None and type == "yaml"):
-                            selected="selected"
-                    >$type</option>
-            </select>
+        <div class="row">
+            <div class="col-sm-10">
+                <select class="form-control" id="@filetype" name="@filetype">
+                    $for type in available_filetypes:
+                        <option value="$type"
+                            $if type == current_filetype or (current_filetype is None and type == "yaml"):
+                                selected="selected"
+                        >$type</option>
+                </select>
+            </div>
         </div>
     </div>
 $else:

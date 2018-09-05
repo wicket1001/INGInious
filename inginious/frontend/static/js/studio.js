@@ -146,7 +146,7 @@ function studio_task_file_open_tab(path)
 
         var edit_file_tabs = $('#edit_file_tabs');
         edit_file_tabs.append('<li role="presentation" class="studio_file_editor_tab">' +
-            '<a href="#' + tab_id + '" aria-controls="editor" role="tab" data-toggle="tab"><i class="fa fa-file-code-o"></i>&nbsp; ' + path +
+            '<a class="nav-link" href="#' + tab_id + '" aria-controls="editor" role="tab" data-toggle="tab"><i class="fa fa-file-code-o"></i>&nbsp; ' + path +
             ' <button class="closetab" type="button"><i class="fa fa-remove"></i></button>' +
             '</a></li>');
         $('a[href="#' + studio_file_editor_tabs[path] + '"] .closetab', edit_file_tabs).click(function()

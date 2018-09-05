@@ -70,12 +70,12 @@ $var Navbar: $:NavbarF()
             <td>$task["tried"]</td>
     		<td>
                 <div class="btn-group" role="group">
-    			    <a href="$get_homepath()/admin/${course.get_id()}/submissions?aggregation=$aggregation['_id']&task=$task['taskid']" class="btn btn-default btn-xs"
+    			    <a href="$get_homepath()/admin/${course.get_id()}/submissions?aggregation=$aggregation['_id']&task=$task['taskid']" class="btn btn-outline-primary btn-xs"
                        title=$:_('"View submissions"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-search"></i></a>
-                    <a href="$get_homepath()/admin/$course.get_id()/download$task['url']" class="btn btn-default btn-xs" title=$:_('"Download submissions"')
+                    <a href="$get_homepath()/admin/$course.get_id()/download$task['url']" class="btn btn-outline-primary btn-xs" title=$:_('"Download submissions"')
                        data-toggle="tooltip" data-placement="bottom"><i class="fa fa-download"></i></a>
                     $if is_admin:
-                        <a href="$get_homepath()/admin/$course.get_id()/replay$task['url']" class="btn btn-default btn-xs" title=$:_('"Replay submissions"')
+                        <a href="$get_homepath()/admin/$course.get_id()/replay$task['url']" class="btn btn-outline-primary btn-xs" title=$:_('"Replay submissions"')
                            data-toggle="tooltip" data-placement="bottom"><i class="fa fa-refresh"></i></a>
                 </div>
     		</td>

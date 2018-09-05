@@ -82,96 +82,86 @@ $:template_helper.call('header_hook')
 </head>
 
 <body>
-    <div id="wrapper">
-        <div class="navbar navbar-expand-sm bg-dark navbar-dark navbar-default navbar-static-top" style="margin-bottom:20px;">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <a class="navbar-brand" href="$get_homepath()/index"><img src="$get_homepath(True)/static/images/header.png" alt="logo"/> INGInious</a>
-                </div>
 
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                $if "Navbar" in content:
+    <div class="navbar navbar-expand-sm bg-dark navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="$get_homepath()/index"><img src="$get_homepath(True)/static/images/header.png" alt="logo"/> INGInious</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+            $if "Navbar" in content:
                     $:content.Navbar
-                $if user_manager.session_logged_in():
-                    <div class="nav navbar-nav navbar-right ml-auto">
-                        <div class="nav-item dropdown" >
-                            <a id="btnGroupDrop1" type="button" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-fw"></i> $user_manager.session_realname() <span class="caret"></span></a>
-                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item" href="$get_homepath()/mycourses"><i class="fa fa-th-list fa-fw"></i> $:_("My courses")</a>
-                                <a class="dropdown-item" href="$get_homepath()/preferences"><i class="fa fa-gears fa-fw"></i> $:_("Preferences")</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="$get_homepath()/queue"><i class="fa fa-dashboard fa-fw"></i> $:_("Service status")</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="$get_homepath()/logout" id="logoff_button"><i class="fa fa-sign-out"></i> $:_("Log out")</a>
-                            </div>
+            $if user_manager.session_logged_in():
+                <ul class="nav navbar-nav navbar-right ml-auto">
+                    <li class="nav-item"><a href="$get_homepath()/courselist" class="nav-link"><i class="fa fa-th-list fa-fw"></i> $:_("Course list")</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="dropdownMenuButton">
+                            <i class="fa fa-user fa-fw"></i> $user_manager.session_realname() <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right"  aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="$get_homepath()/mycourses"><i class="fa fa-th-list fa-fw"></i> $:_("My courses")</a>
+                            <a class="dropdown-item" href="$get_homepath()/preferences"><i class="fa fa-gears fa-fw"></i> $:_("Preferences")</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="$get_homepath()/queue"><i class="fa fa-dashboard fa-fw"></i> $:_("Service status")</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="$get_homepath()/logout" id="logoff_button"><i class="fa fa-sign-out"></i> $:_("Log out")</a>
                         </div>
-                    </div>
-                $else:
-                    <ol class="nav navbar-nav navbar-right ml-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" id="dropdownMenuButton">
-                                <i class="fa fa-globe fa-fw"></i> $:_("English") <span class="caret"></span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                $for code, language in available_languages.items():
-                                    <a href="?lang=$code" class="dropdown-item"><i class="fa fa-chevron-right fa-fw"></i> $code ($language)</a>
-                            </div>
-                        </li>
+                    </li>
+                </ul>
+            $else:
+                <ul class="nav navbar-nav navbar-right ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="dropdownMenuButton">
+                            <i class="fa fa-globe fa-fw"></i> $:_("English") <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right"  aria-labelledby="dropdownMenuButton">
+                            $for code, language in available_languages.items():
+                                <a href="?lang=$code" class="dropdown-item"><i class="fa fa-chevron-right fa-fw"></i> $code ($language)</a>
+                        </div>
+                    </li>
 
-                        <li class="nav-item"><a href="$get_homepath()/courselist" class="nav-link"><i class="fa fa-th-list fa-fw"></i> $:_("Course list")</a></li>
+                    <li class="nav-item"><a href="$get_homepath()/courselist" class="nav-link"><i class="fa fa-th-list fa-fw"></i> $:_("Course list")</a></li>
 
-                        $if allow_registration:
-                            <li class="nav-item"><a href="$get_homepath()/register" class="nav-link"><i class="fa fa-pencil fa-fw"></i> $:_("Register")</a></li>
-                        <li class="nav-item"><a href="$get_homepath()/signin" class="nav-link"><i class="fa fa-sign-in fa-fw"></i> $:_("Sign in")</a></li>
-                    </ol>
-
-                </div>
+                    $if allow_registration:
+                        <li class="nav-item"><a href="$get_homepath()/register" class="nav-link"><i class="fa fa-pencil fa-fw"></i> $:_("Register")</a></li>
+                    <li class="nav-item"><a href="$get_homepath()/signin" class="nav-link"><i class="fa fa-sign-in fa-fw"></i> $:_("Sign in")</a></li>
+                </ul>
             </div>
         </div>
-        <div class="container">
+    </div>
 
-        <div class="page-header" id="banner">
+    <div class="container-fluid" role="main" style="margin-top: 20px; margin-bottom: 65px;">
+        $if "Column" in content:
             <div class="row">
-            <div class="col-lg-8 col-md-7 col-sm-6">
-                $:content
-            </div>
-            <div class="col-lg-4 col-md-5 col-sm-6">
-                <div id="sidebar">
-                    <div id="sidebar_affix">
-                        <div id="sidebar_inner">
-                            $if "Column" in content:
-                                $:content.Column
-                        </div>
+                <div class="col-lg-9 col-md-7 col-sm-6">
+                    $:content
+                </div>
+                <div class="col-lg-3 col-md-5 col-sm-6 position-sticky">
+                    <div class="sticky-top">
+                            $:content.Column
                     </div>
                 </div>
-                <div class="footer_push"></div>
             </div>
-            </div>
+        $else:
+            $:content
+    </div>
+
+    <div id="footer" class="navbar navbar-expand-sm bg-dark navbar-dark bg-dark">
+        <div class="container-fluid">
+            <p class="navbar-text">
+                &copy; 2014-2018 Universit&eacute; catholique de Louvain
+            </p>
+            <p class="navbar-text">
+                <a target="_blank" href="http://www.inginious.org" class="navbar-link">
+                    $:_("INGInious is distributed under AGPL license")
+                </a>
+            </p>
         </div>
     </div>
-      <footer id="footer" class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom">
-        <div class="container">
-            <div class="col-lg-8 col-md-7 col-sm-6" style="width: 100%">
-                <p class="navbar-text">
-                    &copy; 2014-2018 Universit&eacute; catholique de Louvain
-                </p>
-            </div>
-            <div class="col-lg-4 col-md-5 col-sm-6">
-                <p class="navbar-text">
-                    <a target="_blank" href="http://www.inginious.org" class="navbar-link">
-                        $:_("INGInious is distributed under AGPL license")
-                    </a>
-                </p>
-            </div>
-        </div>
 
-      </footer>
-
-
-    </div>
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     $:template_helper.call('javascript_footer')

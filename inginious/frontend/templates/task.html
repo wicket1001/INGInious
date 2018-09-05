@@ -229,14 +229,16 @@ $def ColumnF():
 $var Column: $:ColumnF()
 
 $def NavbarF():
-    <ol class="nav navbar-nav nav-breadcrumb">
-        $if registered:
-            <li><a href="$get_homepath()/mycourses" title=$:_('"My courses"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-th-list"></i></a></li>
-        $else:
-            <li><a href="$get_homepath()/courselist" title=$:_('"Course list"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-th-list"></i></a></li>
-        <li><a href="$get_homepath()/course/$task.get_course().get_id()">$course.get_name(user_manager.session_language())</a></li>
-        <li class="active"><a href="#">$task.get_name(user_manager.session_language()) <span class="sr-only">$:_("(current)")</span></a></li>
-    </ol>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            $if registered:
+                <li class="breadcrumb-item"><a href="$get_homepath()/mycourses" title=$:_('"My courses"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-th-list"></i></a></li>
+            $else:
+                <li class="breadcrumb-item"><a href="$get_homepath()/courselist" title=$:_('"Course list"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-th-list"></i></a></li>
+            <li class="breadcrumb-item"><a href="$get_homepath()/course/$task.get_course().get_id()">$course.get_name(user_manager.session_language())</a></li>
+            <li class="breadcrumb-item active"><span>$task.get_name(user_manager.session_language()) <span class="sr-only">$:_("(current)")</span></span></li>
+        </ol>
+    </nav>
 $var Navbar: $:NavbarF()
 
 $# Start content
@@ -294,8 +296,9 @@ $if user_manager.has_admin_rights_on_course(course):
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
                     <h4 class="modal-title">$:_("Debug information")</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     $:_("The raw data from the container will be displayed here, helping you to debug the task.<br/> This box is only displayed because you are an administrator of this course. It is not displayed to students.")
@@ -326,16 +329,17 @@ $else:
         $ i = i+1
     <input type="hidden" name="@action" value="submit"/>
     $for key, problem in enumerate(task.get_problems()):
-        <div class="panel panel-default problem">
+        <div class="card card-default">
             $if len(task.get_problems()) != 1 or problem.get_name(user_manager.session_language()) != "":
-                <div class="panel-heading">
-                    <h3 class="panel-title">
+                <div class="card-heading">
+                    <h3 class="card-header">
                         $if len(task.get_problems()) != 1:
                             $:_("Question {}").format(str(key+1)):
                         $problem.get_name(user_manager.session_language())
                     </h3>
+
                 </div>
-            <div class="panel-body">
+            <div class="card-body">
                 $:problem.show_input(template_helper, user_manager.session_language(), user_manager.session_username())
             </div>
         </div>
@@ -401,4 +405,15 @@ var problems_types = $:pdict
 $$(document).ready(function() {
     init_task_page("$task.get_evaluate()");
 });
+
+</script>
+
+$# Input random
+$# set up some useful variable that may be used by task author
+<script>
+    var input = {
+        "@lang": "$user_manager.session_language()",
+        "@username": "$user_manager.session_username()",
+        "@random": $input_random_list
+    }
 </script>

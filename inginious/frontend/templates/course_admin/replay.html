@@ -12,11 +12,11 @@ $var Column: $:template_helper.call('course_admin_menu',course=course,current='r
 $ use_classrooms = course.use_classrooms()
 
 $def NavbarF():
-    <ol class="nav navbar-nav nav-breadcrumb">
-        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name(user_manager.session_language())</a></li>
-        <li><a href="$get_homepath()/admin/$course.get_id()" title=$:_('"Administration"') data-toggle="tooltip" data-placement="bottom">
+    <ol class="nav navbar-nav navbar-breadcrumb">
+        <li><a class="nav-link" href="$get_homepath()/course/$course.get_id()">$course.get_name(user_manager.session_language())</a></li>
+        <li><a class="nav-link" href="$get_homepath()/admin/$course.get_id()" title=$:_('"Administration"') data-toggle="tooltip" data-placement="bottom">
             <i class="fa fa-user-secret"></i></a></li>
-        <li class="active"><a href="#"><i class="fa fa-refresh"></i> $:_("Replay submissions") <span class="sr-only">$:_("(current)")</span></a></li>
+        <li class="active"><a class="nav-link" href="#"><i class="fa fa-refresh"></i> $:_("Replay submissions") <span class="sr-only">$:_("(current)")</span></a></li>
     </ol>
 $var Navbar: $:NavbarF()
 

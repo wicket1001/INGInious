@@ -12,11 +12,11 @@ $def ColumnF():
 $var Column: $:ColumnF()
 
 $def NavbarF():
-    <ol class="nav navbar-nav nav-breadcrumb">
-        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name(user_manager.session_language())</a></li>
-        <li><a href="$get_homepath()/admin/$course.get_id()" title="$:_('Administration')" data-toggle="tooltip" data-placement="bottom">
+    <ol class="nav navbar-nav navbar-breadcrumb">
+        <li><a class="nav-link" href="$get_homepath()/course/$course.get_id()">$course.get_name(user_manager.session_language())</a></li>
+        <li><a class="nav-link" href="$get_homepath()/admin/$course.get_id()" title="$:_('Administration')" data-toggle="tooltip" data-placement="bottom">
             <i class="fa fa-user-secret"></i></a></li>
-        <li class="active"><a href="#"><i class="fa fa-bomb"></i> $:_("Danger zone") <span class="sr-only">$:_("(current)")</span></a></li>
+        <li class="active"><a class="nav-link" href="#"><i class="fa fa-bomb"></i> $:_("Danger zone") <span class="sr-only">$:_("(current)")</span></a></li>
     </ol>
 $var Navbar: $:NavbarF()
 
@@ -34,11 +34,11 @@ $elif msg:
 
 <div role="tabpanel">
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active">
-            <a href="#tab_archive_data" role="tab" data-toggle="tab"><i class="fa fa-archive fa-fw"></i> $:_("Archive data")</a>
+        <li role="presentation" class="nav-item">
+            <a class=" active nav-link" href="#tab_archive_data" role="tab" data-toggle="tab"><i class="fa fa-archive fa-fw"></i> $:_("Archive data")</a>
         </li>
-        <li role="presentation">
-            <a href="#tab_delete_course" role="tab" data-toggle="tab"><i class="fa fa-trash fa-fw"></i> $:_("Delete course")</a>
+        <li role="presentation" class="nav-item">
+            <a href="#tab_delete_course" class="nav-link" role="tab" data-toggle="tab"><i class="fa fa-trash fa-fw"></i> $:_("Delete course")</a>
         </li>
     </ul>
     <div class="tab-content">

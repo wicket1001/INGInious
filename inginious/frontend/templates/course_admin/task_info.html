@@ -13,23 +13,23 @@ $ use_classrooms = course.use_classrooms()
 $ is_admin = user_manager.has_admin_rights_on_course(course)
 
 $def NavbarF():
-    <ol class="nav navbar-nav nav-breadcrumb">
-        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name(user_manager.session_language())</a></li>
-        <li><a href="$get_homepath()/admin/$course.get_id()" title=$:_('"Administration"') data-toggle="tooltip" data-placement="bottom">
+    <ol class="nav navbar-nav navbar-breadcrumb">
+        <li><a class="nav-link" href="$get_homepath()/course/$course.get_id()">$course.get_name(user_manager.session_language())</a></li>
+        <li><a class="nav-link" href="$get_homepath()/admin/$course.get_id()" title=$:_('"Administration"') data-toggle="tooltip" data-placement="bottom">
             <i class="fa fa-user-secret"></i></a></li>
-        <li><a href="$get_homepath()/admin/$course.get_id()/tasks" title=$:_('"Tasks"') data-toggle="tooltip" data-placement="bottom">
+        <li><a class="nav-link" href="$get_homepath()/admin/$course.get_id()/tasks" title=$:_('"Tasks"') data-toggle="tooltip" data-placement="bottom">
             <i class="fa fa-tasks"></i></a></li>
-        <li class="active"><a href="#">$task.get_name(user_manager.session_language()) <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a class="nav-link" href="#">$task.get_name(user_manager.session_language()) <span class="sr-only">(current)</span></a></li>
     </ol>
 $var Navbar: $:NavbarF()
 
 <h2>$:_("Results for task \"{}\"").format(task.get_name(user_manager.session_language()))</h2>
                     $if not course.is_lti():
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" id="edit_task_tabs" role="tablist">
-                                            <li role="presentation" class="active"><a href="#tab_indiv" aria-controls="basicinfo" role="tab" data-toggle="tab"><i class="fa
+                            <ul class="nav nav-tabs flex-wrap" id="edit_task_tabs" role="tablist">
+                                            <li role="presentation" class=" nav-item "><a href="#tab_indiv" class="nav-link active" aria-controls="basicinfo" role="tab" data-toggle="tab"><i class="fa
                                     fa-user fa-fw"></i>&nbsp; $:_("Individual results")</a></li>
-                                            <li role="presentation"><a href="#tab_aggregation" aria-controls="container" role="tab" data-toggle="tab"><i class="fa
+                                            <li role="presentation" class=" nav-item"><a href="#tab_aggregation" class="nav-link" aria-controls="container" role="tab" data-toggle="tab"><i class="fa
                                     fa-users fa-fw"></i>&nbsp; $(_("Classroom results") if use_classrooms else _("Team results"))</a></li>
                             </ul>
                             <div id="edit_task_tabs_content" class="tab-content">
@@ -85,12 +85,12 @@ $var Navbar: $:NavbarF()
                                 <td>$user["tried"] </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="$get_homepath()/admin/${course.get_id()}/submissions?user=$user['username']&task=$task.get_id()" class="btn btn-default btn-xs"
+                                        <a href="$get_homepath()/admin/${course.get_id()}/submissions?user=$user['username']&task=$task.get_id()" class="btn btn-outline-primary btn-xs"
                                            title=$:_('"View submissions"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-search"></i></a>
-                                        <a href="$get_homepath()/admin/${course.get_id()}/download$user['url']" class="btn btn-default btn-xs"
+                                        <a href="$get_homepath()/admin/${course.get_id()}/download$user['url']" class="btn btn-outline-primary btn-xs"
                                            title=$:_('"Download submissions"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-download"></i></a>
                                         $if is_admin:
-                                            <a href="$get_homepath()/admin/${course.get_id()}/replay$user['url']" class="btn btn-default btn-xs"
+                                            <a href="$get_homepath()/admin/${course.get_id()}/replay$user['url']" class="btn btn-outline-primary btn-xs"
                                                title=$:_('"Replay submissions"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-refresh"></i></a>
                                     </div>
                                 </td>
@@ -154,13 +154,13 @@ $var Navbar: $:NavbarF()
                                             <td>$aggregation["tried"] </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <!--<a href="$get_homepath()/admin/${course.get_id()}/aggregation/$aggregation['_id']/$task.get_id()" class="btn btn-default btn-xs"-->
-                                                    <a href="$get_homepath()/admin/${course.get_id()}/submissions?aggregation=$aggregation['_id']&task=$task.get_id()" class="btn btn-default btn-xs"
+                                                    <!--<a href="$get_homepath()/admin/${course.get_id()}/aggregation/$aggregation['_id']/$task.get_id()" class="btn btn-outline-primary btn-xs"-->
+                                                    <a href="$get_homepath()/admin/${course.get_id()}/submissions?aggregation=$aggregation['_id']&task=$task.get_id()" class="btn btn-outline-primary btn-xs"
                                                        title=$:_('"View submissions"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-search"></i></a>
-                                                    <a href="$get_homepath()/admin/${course.get_id()}/download$aggregation['url']" class="btn btn-default btn-xs"
+                                                    <a href="$get_homepath()/admin/${course.get_id()}/download$aggregation['url']" class="btn btn-outline-primary btn-xs"
                                                        title=$:_('"Download  submissions"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-download"></i></a>
                                                     $if is_admin:
-                                                        <a href="$get_homepath()/admin/${course.get_id()}/replay$aggregation['url']" class="btn btn-default btn-xs"
+                                                        <a href="$get_homepath()/admin/${course.get_id()}/replay$aggregation['url']" class="btn btn-outline-primary btn-xs"
                                                            title=$:_('"Replay submissions"') data-toggle="tooltip" data-placement="bottom"><i class="fa fa-refresh"></i></a>
                                                 </div>
                                             </td>

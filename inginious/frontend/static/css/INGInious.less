@@ -15,70 +15,26 @@
     font-family: 'Yanone Kaffeesatz', sans-serif;
     font-weight: 300;
     font-size: 25px;
+    line-height: 45px;
+    padding:0;
 
     img
     {
         height: 45px;
-        margin-top: -12px;
-        vertical-align: top;
+        vertical-align: bottom;
         display: inline;
     }
 }
 
+.navbar-text {
+    margin:0;
+    padding: 0;
+    line-height: 45px;
+}
+
 .navbar
 {
-    -webkit-backface-visibility: hidden;
-}
-
-#main_container
-{
-    #sidebar
-    {
-        height: 100%;
-
-        #sidebar_inner
-        {
-            position: relative;
-            overflow: hidden;
-        }
-
-        #sidebar_affix
-        {
-            @media screen and (max-width: 768px)
-            {
-                position: static !important;
-                margin-bottom: 60px;
-            }
-        }
-
-        .affix
-        {
-            top: 0;
-        }
-
-        .affix-bottom
-        {
-            position: relative;
-        }
-
-        .affix-top
-        {
-            position: relative;
-        }
-
-
-    }
-}
-
-.index-logo
-{
-    position: absolute;
-    right: 0;
-    img
-    {
-        width: 100%;
-        max-width: 300px;
-    }
+    padding: 0;
 }
 
 #task_debug
@@ -100,7 +56,7 @@
     }
 }
 
-.nav-tabs
+/*.nav-tabs
 {
     margin-bottom: 15px;
 }
@@ -122,44 +78,52 @@
     {
         line-height: 22px;
     }
-}
+}*/
 
-.nav-breadcrumb
-{
-    li
+.breadcrumb {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-transform: none;
+
+    .breadcrumb-item
     {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         max-width: 250px;
-        @media screen and (max-width: 1024px)
-        {
-            max-width: 150px;
-        }
-        @media screen and (max-width: 800px)
-        {
-            max-width: 120px;
-        }
 
-
-        a
-        {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        &:after
-        {
+        &:before {
 
             font: normal normal normal 24px/1 FontAwesome;
             content: "\f105";
+            margin-top: -4px;
+            color: #888;
             position: absolute;
-            left: -3px;
-            top: 10px;
-            color: rgba(255, 255, 255, 0.5);
         }
+
+        span {
+            padding-left: 1rem;
+        }
+
+        a {
+            color: rgba(255,255,255,0.7);
+            padding-left: 1rem;
+
+            &:hover {
+                text-decoration: none;
+                color: white;
+            }
+        }
+    }
+
+    .active {
+        max-width: 100%;
     }
 }
 
-div[data-toggle="buttons"] label
+/*div[data-toggle="buttons"] label
 {
     color: #ffffff;
     background-color: #f04124;
@@ -195,34 +159,31 @@ div[data-toggle="buttons"] label
 label.active:before
 {
 
+}*/
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 45px;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 45px;
+  line-height: 45px; /* Vertically center the text there */
 }
 
-/* Footer */
-html, body
-{
-    height: 100%;
-}
-
-#wrapper
-{
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0 auto -81px;
-}
-
-#footer, .footer_push
-{
-    padding-top: 36px;
-    height: 81px;
-    .navbar
-    {
-        margin-bottom: 0;
-    }
-}
 
 /* Checked list group */
-ul.checked-list-box
+/*ul.checked-list-box
 {
     max-height: 315px;
     overflow-y: scroll;
@@ -273,7 +234,7 @@ li.placeholder:before {
     border: 5px solid transparent;
     border-left-color: black;
     border-right: none;
-}
+}*/
 
 .sorted_table tr.placeholder
 {

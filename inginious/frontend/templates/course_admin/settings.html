@@ -10,11 +10,11 @@ $var title: $:course.get_name(user_manager.session_language()) - $:_("Settings")
 $var Column: $:template_helper.call('course_admin_menu',course=course,current='settings')
 
 $def NavbarF():
-    <ol class="nav navbar-nav nav-breadcrumb">
-        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name(user_manager.session_language())</a></li>
-        <li><a href="$get_homepath()/admin/$course.get_id()" title=$:_('"Administration"') data-toggle="tooltip" data-placement="bottom">
+    <ol class="nav navbar-nav navbar-breadcrumb">
+        <li><a href="$get_homepath()/course/$course.get_id()" class="nav-link">$course.get_name(user_manager.session_language())</a></li>
+        <li><a href="$get_homepath()/admin/$course.get_id()" class="nav-link" title=$:_('"Administration"') data-toggle="tooltip" data-placement="bottom">
             <i class="fa fa-user-secret"></i></a></li>
-        <li class="active"><a href="#"><i class="fa fa-cog"></i> $:_("Course settings") <span class="sr-only">$:_("(current)")</span></a></li>
+        <li class="active"><a href="#" class="nav-link"><i class="fa fa-cog"></i> $:_("Course settings") <span class="sr-only">$:_("(current)")</span></a></li>
     </ol>
 $var Navbar: $:NavbarF()
 
@@ -139,23 +139,34 @@ $elif saved:
             <div class="row">
                 <div class="col-xs-2 col-lg-2"><label class="control-label">$:_("From")</label></div>
                 <div class="col-xs-10 col-lg-4">
-                    <div class='input-group date' id='accessible_start_picker'>
-                        <input name="accessible_start" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_start_date()}" placeholder="2014-06-29 10:00" type='text' class="form-control" />
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    <div class="form-group">
+                        <div class='input-group date' id='accessible_start_picker' data-target-input="nearest">
+                                <input data-target='#accessible_start_picker' name="accessible_start" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_start_date()}" placeholder="2014-06-29 10:00" type='text' class="form-control datetimepicker-input" />
+                                <div class="input-group-append" data-target="#accessible_start_picker" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+
+                        </div>
                     </div>
+
                 </div>
                 <div class="col-xs-2 col-lg-2"><label class="control-label">$:_("To")</label></div>
                 <div class="col-xs-10 col-lg-4">
-                    <div class='input-group date' id='accessible_end_picker'>
-                        <input name="accessible_end" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_end_date()}" placeholder="2014-06-29 10:00" type='text' class="form-control" />
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    <div class="form-group">
+                        <div class='input-group date' id='accessible_end_picker' data-target-input="nearest">
+                                <input data-target='#accessible_end_picker' name="accessible_end" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_end_date()}" placeholder="2014-06-29 10:00" type='text' class="form-control datetimepicker-input" />
+                                <div class="input-group-append" data-target="#accessible_end_picker" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
             <script type="text/javascript">
                 \$(function() {
-                    \$('#accessible_start_picker').datetimepicker({locale: '$user_manager.session_language()', sideBySide: true});
-                    \$('#accessible_end_picker').datetimepicker({locale: '$user_manager.session_language()', sideBySide: true});
+                    \$('#accessible_start_picker').datetimepicker({locale: '$user_manager.session_language()', sideBySide: true, format:'YYYY-MM-DD HH:mm:ss'});
+                    \$('#accessible_end_picker').datetimepicker({locale: '$user_manager.session_language()', sideBySide: true, format:'YYYY-MM-DD HH:mm:ss'});
                 });
             </script>
         </div>
@@ -185,23 +196,33 @@ $elif saved:
             <div class="row">
                 <div class="col-xs-2 col-lg-2"><label class="control-label">$:_("From")</label></div>
                 <div class="col-xs-10 col-lg-4">
-                    <div class='input-group date' id='registration_start_picker'>
-                        <input name="registration_start" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_start_date()}" placeholder="2014-06-29 10:00" type='text' class="form-control" />
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    <div class="form-group">
+                        <div class='input-group date' id='registration_start_picker' data-target-input="nearest">
+                                <input data-target='#registration_start_picker' name="registration_start" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_start_date()}" placeholder="2014-06-29 10:00" type='text' class="form-control datetimepicker-input" />
+                                <div class="input-group-append" data-target="#registration_start_picker" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+
+                        </div>
                     </div>
                 </div>
                 <div class="col-xs-2 col-lg-2"><label class="control-label">$:_("To")</label></div>
                 <div class="col-xs-10 col-lg-4">
-                    <div class='input-group date' id='registration_end_picker'>
-                        <input name="registration_end" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_end_date()}" placeholder="2014-06-29 10:00" type='text' class="form-control" />
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    </div>
+                    <div class="form-group">
+                            <div class='input-group date' id='registration_end_picker' data-target-input="nearest">
+                                    <input data-target='#registration_end_picker' name="registration_start" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_end_date()}" placeholder="2014-06-29 10:00" type='text' class="form-control datetimepicker-input" />
+                                    <div class="input-group-append" data-target="#registration_end_picker" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+
+                            </div>
+                        </div>
                 </div>
             </div>
             <script type="text/javascript">
                 \$(function() {
-                    \$('#registration_start_picker').datetimepicker({locale: '$user_manager.session_language()', sideBySide: true});
-                    \$('#registration_end_picker').datetimepicker({locale: '$user_manager.session_language()', sideBySide: true});
+                    \$('#registration_start_picker').datetimepicker({locale: '$user_manager.session_language()', sideBySide: true, format:'YYYY-MM-DD HH:mm:ss'});
+                    \$('#registration_end_picker').datetimepicker({locale: '$user_manager.session_language()', sideBySide: true, format:'YYYY-MM-DD HH:mm:ss'});
                 });
             </script>
         </div>

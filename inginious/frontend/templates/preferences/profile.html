@@ -10,11 +10,11 @@ $var title: $:_("My profile")
 $var Column: $:template_helper.call('preferences_menu',current='profile')
 
 $def NavbarF():
-    <ol class="nav navbar-nav nav-breadcrumb">
+    <ol class="nav navbar-nav navbar-breadcrumb">
         <li>
-            <a href="$get_homepath()/preferences" title="$:_('Preferences')" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-gears"></i></a>
+            <a href="$get_homepath()/preferences" title="$:_('Preferences')" data-toggle="tooltip" data-placement="bottom" class="nav-link"><i class="fa fa-gears"></i></a>
         </li>
-        <li class="active"><a href="#"><i class="fa fa-user"></i> $:_("My profile") <span class="sr-only">$:_("(current)")</span></a></li>
+        <li class="active"><a href="#" class="nav-link"><i class="fa fa-user"></i> $:_("My profile") <span class="sr-only">$:_("(current)")</span></a></li>
     </ol>
 $var Navbar: $:NavbarF()
 

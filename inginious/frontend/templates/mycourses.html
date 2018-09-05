@@ -8,11 +8,13 @@ $#
 $var title: $:_("My courses")
 
 $def NavbarF():
-    <ol class="nav navbar-nav nav-breadcrumb">
-        <li class="active"><a href="#"><i class="fa fa-th-list"></i> $:_("My courses")
-            <span class="sr-only">$:_("(current)")</span></a>
-        </li>
-    </ol>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active"><span><i class="fa fa-th-list"></i> $:_("My courses")
+                <span class="sr-only">$:_("(current)")</span></span>
+            </li>
+        </ol>
+    </nav>
 $var Navbar: $:NavbarF()
 
 $# Left column content

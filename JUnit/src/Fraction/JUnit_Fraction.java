@@ -54,6 +54,7 @@ public class JUnit_Fraction {
         assertEquals(3, (fraction1.sub(fraction2)).getDenominator());
     }
 
+    
     @Test
     public void testFractionMult(){
         fraction1.setNumerator(6);

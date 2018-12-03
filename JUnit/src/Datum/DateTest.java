@@ -61,7 +61,6 @@ public class DateTest {
 		System.out.println("s5 = " + s5 + " [ January 1, 1900 ]");
 		Date s6 = getDate(2, 29, 2000); // ok
 		System.out.println("s6 = " + s6 + " [ February 29, 2000 ]");
-
 		// Bonus:
 		System.out.println("d4 - Day of year = " + d4.dayOfYear() + " [ 60 ]"); //  count from  January 1
 		System.out.println("d4 - Day of week = " + d4.dayOfWeek() + " [ 3 ]"); // 0-Sunday, 1-Monday,...,6-Saturday

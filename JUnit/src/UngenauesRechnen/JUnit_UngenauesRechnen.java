@@ -10,17 +10,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class JUnit_UngenauesRechnen {
 
     @Test
-    public void basicTest(){
+    public void basicTest() {
         InexactNumber a = new InexactNumber(300, 5);
         InexactNumber b = new InexactNumber(200, 3);
-        assertEquals("500.0±8.0",a.add(b).toString());
-        assertEquals("100.0±8.0",a.sub(b).toString());
-        assertEquals("60000.0±1900.0",a.mult(b).toString());
-        assertEquals("1.5±0.0475",a.div(b).toString());
+        assertEquals("500.0±8.0", a.add(b).toString());
+        assertEquals("100.0±8.0", a.sub(b).toString());
+        assertEquals("60000.0±1900.0", a.mult(b).toString());
+        assertEquals("1.5±0.0475", a.div(b).toString());
     }
 
     @Test
-    public void whiskyTest(){
+    public void whiskyTest() {
         double volumeBottle = 0.7D;
         double percentBottle = 0;
         double volumeGlass = 0.02D;
@@ -66,8 +66,42 @@ public class JUnit_UngenauesRechnen {
         assertEquals(0.45, max);
         assertEquals(0.009630000000000001, (max * inexactGlass.getMax()));
         assertEquals(0.008369999999999999, (max * inexactGlass.getMin()));
+    }
+
+    @Test
+    public void wohnungTest(){
+        double [] [] information = {
+                {1.349, 1.808},
+                {4.892, 3.240},
+                {4.185, 3.168},
+                {4.395, 2.678},
+                {2.124, 2.673}
 
 
+        };
+        double deviation = 0.002;
+        double originalM2 = 52.3;
+        double pricePerM2 = 8.061;
+        double priceGes = 463.9;
+        assertEquals(52.3, originalM2);
+        assertEquals(8.061, pricePerM2);
+        assertEquals(463.9, priceGes);
+        assertEquals(2.0, (deviation * 1000));
 
+
+        InexactNumber flat = UngenauRechnenTest.getFlat(information, deviation);
+
+        assertEquals(48.994414, flat.getX());
+        assertEquals(0.061023999999999995, flat.getDx());
+        assertEquals(48.933389999999996, flat.getMin());
+        assertEquals(49.055438, flat.getMax());
+
+        assertEquals(57.548691229376004, (priceGes / pricePerM2));
+
+        assertEquals(9.456633132729493,((new InexactNumber(priceGes).div(flat)).getMin()));
+        assertEquals(395.43588571799995,(flat.mult(new InexactNumber(pricePerM2)).getMax()));
+
+        double inaccuracy = UngenauRechnenTest.getInaccuracy(information, originalM2) * 1000;
+        assertEquals(108.33723401985947, inaccuracy);
     }
 }

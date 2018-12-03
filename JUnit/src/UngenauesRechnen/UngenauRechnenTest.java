@@ -5,7 +5,7 @@ public class UngenauRechnenTest {
     public static void main(String[] args) {
         test(new InexactNumber(300, 5), new InexactNumber(200, 3));
         test(new InexactNumber(10, 1), new InexactNumber(5, 2));
-        whisky(0.7D, 0, 0.02D, 7);
+        //whisky(0.7D, 0, 0.02D, 7);
         double [] [] information = {
                 {1.349, 1.808},
                 {4.892, 3.240},
@@ -16,7 +16,7 @@ public class UngenauRechnenTest {
 
         };
         double deviation = 0.002; // 2 mm Abweichung bei Bosch Laser Messer
-        // wohnung(information, deviation, 52.3, 8.061, 463.9);  // Quadratmeter Org: 52,3 ; Quadratmeterpreis: 8,061 ; Miete: 463,90
+        wohnung(information, deviation, 52.3, 8.061, 463.9);  // Quadratmeter Org: 52,3 ; Quadratmeterpreis: 8,061 ; Miete: 463,90
     }
 
     private static void test (InexactNumber a, InexactNumber b) {
@@ -88,7 +88,7 @@ public class UngenauRechnenTest {
         System.out.println("Inaccuracy: " + inaccuracy);
     }
 
-    private static double getInaccuracy(double [] [] information, double originalM2) { // TODO
+    protected static double getInaccuracy(double [] [] information, double originalM2) { // TODO
         double inaccuracy = 1;
         double tolerance = 0.000001;
         double erg = originalM2 - getFlat(information, inaccuracy).getMax();
@@ -103,7 +103,7 @@ public class UngenauRechnenTest {
         return inaccuracy;
     }
 
-    private static InexactNumber getFlat (double [] [] information, double deviation) {
+    protected static InexactNumber getFlat (double [] [] information, double deviation) {
         InexactNumber flat = new InexactNumber();
         for (double room []: information) {
             flat = flat.add(getRoom(room [0], room [1], deviation));
@@ -111,7 +111,7 @@ public class UngenauRechnenTest {
         return flat;
     }
 
-    private static InexactNumber getRoom (double a, double b, double tolerance) {
+    protected static InexactNumber getRoom (double a, double b, double tolerance) {
         return new InexactNumber(a, tolerance).mult(new InexactNumber(b, tolerance));
     }
 }

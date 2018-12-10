@@ -78,9 +78,13 @@ class LDAPAuthenticationPage(AuthenticationPage):
         try:
             # Connect to the ldap
             logger.debug('Connecting to ' + settings['host'] + ", port " + str(settings['port']))
-            conn = ldap3.Connection(
-                ldap3.Server(settings['host'], port=settings['port'], use_ssl=settings["encryption"] == 'ssl',
-                             get_info=ldap3.ALL), auto_bind=True)
+            server = ldap3.Server(settings['host'], port=settings['port'], use_ssl=settings["encryption"] == 'ssl',
+                                  get_info=ldap3.ALL)
+            if settings['auto_bind']:
+                conn = ldap3.Connection(server, auto_bind=True, username='CN=' + login + ',' + settings['base_dn'],
+                                        password=password)
+            else:
+                conn = ldap3.Connection(server, auto_bind=True)
             logger.debug('Connected to ' + settings['host'] + ", port " + str(settings['port']))
         except Exception as e:
             logger.exception("Can't initialze connection to " + settings['host'] + ': ' + str(e))

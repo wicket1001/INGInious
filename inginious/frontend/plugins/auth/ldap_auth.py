@@ -93,7 +93,8 @@ class LDAPAuthenticationPage(AuthenticationPage):
 
         try:
             request = settings["request"].format(login)
-            conn.search(settings["base_dn"], request, attributes=["cn", "userPrincipalName"])
+            conn.search(settings["base_dn"], request, attributes=[settings.get("cn", "cn"),
+                                                                  settings.get("mail", "mail")])
             user_data = conn.response[0]
         except Exception as ex:
             logger.exception("Can't get user data : " + str(ex))
@@ -103,7 +104,7 @@ class LDAPAuthenticationPage(AuthenticationPage):
 
         if conn.rebind(user_data['dn'], password=password):
             try:
-                email = user_data["attributes"][settings.get("userPrincipalName", "userPrincipalName")]
+                email = user_data["attributes"][settings.get("mail", "mail")]
                 username = login
                 realname = user_data["attributes"][settings.get("cn", "cn")]
             except KeyError as e:

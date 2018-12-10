@@ -155,6 +155,8 @@ class LTILaunchPage(INGIniousPage):
         try:
             test = LTIWebPyToolProvider.from_webpy_request()
             validator = LTIValidator(self.database.nonce, course.lti_keys())
+            if test.launch_url.startswith('http:'):
+                test.launch_url = 'https:' + test.launch_url[5:]
             verified = test.is_valid_request(validator)
         except Exception:
             self.logger.exception("...")

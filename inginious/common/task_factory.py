@@ -12,12 +12,13 @@ from inginious.common.tasks import Task
 from inginious.common.base import id_checker
 from inginious.common.task_file_readers.yaml_reader import TaskYAMLFileReader
 from inginious.common.exceptions import InvalidNameException, TaskNotFoundException, TaskUnreadableException, TaskReaderNotFoundException
+from inginious.frontend.user_manager import UserManager
 
 
 class TaskFactory(object):
     """ Load courses from disk """
 
-    def __init__(self, filesystem: FileSystemProvider, hook_manager, task_problem_types, task_class=Task):
+    def __init__(self, filesystem: FileSystemProvider, hook_manager, task_problem_types, task_class=Task, user_manager=None, sac=None):
         self._filesystem = filesystem
         self._task_class = task_class
         self._hook_manager = hook_manager
@@ -25,6 +26,11 @@ class TaskFactory(object):
         self._task_file_managers = {}
         self._task_problem_types = task_problem_types
         self.add_custom_task_file_manager(TaskYAMLFileReader())
+        self.user_manager = user_manager
+        self.sac = sac
+        # x = user_manager.session_username()
+        from inginious.common.log import get_course_logger
+        get_course_logger("Custom").info(("Username from Task Factory ", user_manager))
 
     def add_problem_type(self, problem_type):
         """
@@ -249,8 +255,18 @@ class TaskFactory(object):
                 if translations_fs.exists(lang + ".mo"):
                     last_modif["$i18n/" + lang + ".mo"] = translations_fs.get_last_modification_time(lang + ".mo")
 
+        if self.user_manager.session_username(): # and self.user_manager.session_username != '': # sessesion_username = ''
+            username = self.user_manager.session_username() if self.user_manager.session_username() else ''
+            self.sac.set_username(username)
+        else:
+            username = self.sac.username
+        get_course_logger("Custom").info(("USER MANAGER in TaskFactory", username,
+                                          self.user_manager,
+                                          self.user_manager.session_username(),
+                                          self.user_manager.session_logged_in(),
+                                          self.user_manager.session_id()))
         self._cache[(course.get_id(), taskid)] = (
-            self._task_class(course, taskid, task_content, task_fs, self._hook_manager, self._task_problem_types),
+            self._task_class(course, taskid, task_content, task_fs, self._hook_manager, self._task_problem_types, username),
             last_modif
         )
 

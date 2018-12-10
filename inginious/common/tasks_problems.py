@@ -252,9 +252,13 @@ class MultipleChoiceProblem(Problem):
 
     def get_choice_with_index(self, index):
         """ Return the choice with index=index """
+        from inginious.common.log import get_course_logger
+        get_course_logger("Custom").info((index, self._choices))
         for entry in self._choices:
             if entry["index"] == index:
                 return entry
+        from inginious.common.log import get_course_logger
+        get_course_logger("Custom").info(("None"))
         return None
 
     def input_type(self):
@@ -284,6 +288,11 @@ class MultipleChoiceProblem(Problem):
         valid = True
         msgs = []
         invalid_count = 0
+
+        def log(text):
+            from inginious.common.log import get_course_logger
+            get_course_logger("Custom").info(text)
+
         if self._multiple:
             for choice in self._choices:
                 if choice["valid"] and not choice["index"] in task_input[self.get_id()] and not str(choice["index"]) in task_input[self.get_id()]:
@@ -297,6 +306,8 @@ class MultipleChoiceProblem(Problem):
                 if feedback is not None:
                     msgs.append(self.gettext(language, feedback))
         else:
+            from inginious.common.log import get_course_logger
+            get_course_logger("Custom").info(("ID: ", task_input, self.get_id()))
             choice = self.get_choice_with_index(int(task_input[self.get_id()]))
             valid = choice["valid"]
             if not valid:

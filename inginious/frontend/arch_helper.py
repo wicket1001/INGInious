@@ -55,7 +55,7 @@ async def _restart_on_cancel(logger, agent):
             logger.exception("Restarting agent")
             pass
 
-def create_arch(configuration, tasks_fs, context):
+def create_arch(configuration, tasks_fs, context, user_manager=None, sac=None):
     """ Helper that can start a simple complete INGInious arch locally if needed, or a client to a remote backend.
         Intended to be used on command line, makes uses of exit() and the logger inginious.frontend.
     :param configuration: configuration dict
@@ -90,7 +90,7 @@ def create_arch(configuration, tasks_fs, context):
         client = Client(context, "inproc://backend_client")
         backend = Backend(context, "inproc://backend_agent", "inproc://backend_client")
         agent_docker = DockerAgent(context, "inproc://backend_agent", "Docker - Local agent", concurrency, tasks_fs, debug_host, debug_ports, tmp_dir)
-        agent_mcq = MCQAgent(context, "inproc://backend_agent", "MCQ - Local agent", 1, tasks_fs)
+        agent_mcq = MCQAgent(context, "inproc://backend_agent", "MCQ - Local agent", 1, tasks_fs, user_manager=user_manager, sac=sac)
 
         asyncio.ensure_future(_restart_on_cancel(logger, agent_docker))
         asyncio.ensure_future(_restart_on_cancel(logger, agent_mcq))

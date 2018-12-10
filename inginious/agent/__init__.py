@@ -179,8 +179,8 @@ class Agent(object, metaclass=ABCMeta):
                                                                 "administrator.")
         except JobNotRunningException:
             self._logger.exception("JobNotRunningException in new_job")
-        except:
-            self._logger.exception("Unknown exception in new_job")
+        except Exception as e:
+            self._logger.exception("Unknown exception in new_job" + ": " + str(e))
             await self.send_job_result(message.job_id, "crash", "An unknown error occured in the agent. Please contact your course "
                                                                 "administrator.")
 

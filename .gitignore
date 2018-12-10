@@ -23,3 +23,8 @@ inginious/backup
 # Build files
 build/lib
 build/scripts-*
+
+venv/
+working-dir/*
+Testkurs/*
+tutorial/*

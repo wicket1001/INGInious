@@ -203,7 +203,7 @@ class CourseFactory(object):
         self._task_factory.update_cache_for_course(courseid)
 
 
-def create_factories(fs_provider, task_problem_types, hook_manager=None, course_class=Course, task_class=Task):
+def create_factories(fs_provider, task_problem_types, hook_manager=None, course_class=Course, task_class=Task, user_manager=None, sac=None):
     """
     Shorthand for creating Factories
     :param fs_provider: A FileSystemProvider leading to the courses
@@ -215,5 +215,7 @@ def create_factories(fs_provider, task_problem_types, hook_manager=None, course_
     if hook_manager is None:
         hook_manager = HookManager()
 
-    task_factory = TaskFactory(fs_provider, hook_manager, task_problem_types, task_class)
+    from inginious.common.log import get_course_logger
+    get_course_logger("Custom").info(("USER MANAGER", user_manager))
+    task_factory = TaskFactory(fs_provider, hook_manager, task_problem_types, task_class, user_manager, sac)
     return CourseFactory(fs_provider, task_factory, hook_manager, course_class), task_factory

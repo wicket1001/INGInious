@@ -12,7 +12,7 @@ from inginious.common.base import id_checker
 class Task(object):
     """ Contains the data for a task """
 
-    def __init__(self, course, taskid, content, task_fs, hook_manager, task_problem_types):
+    def __init__(self, course, taskid, content, task_fs, hook_manager, task_problem_types, seed=''): # Added seed in constructor
         """
             Init the task. course is a Course object, taskid the task id, and content is a dictionnary containing the data needed to initialize the Task object.
             If init_data is None, the data will be taken from the course tasks' directory.
@@ -44,6 +44,20 @@ class Task(object):
         if "problems" not in self._data:
             raise Exception("Tasks must have some problems descriptions")
 
+        # from inginious.common.log import get_course_logger
+        # get_course_logger("Custom").info("INFO")
+        self._random_question = {"choose": 0, "whole": -1, "takeout": -1}
+        # choose 1 = wird zufällig ausgewählt, choose 0 = alle werden angezeigt
+        # whole = gesamte Anzahl der Fragen dieser Sektion
+        # takeout = Anzahl der Fragen die davon genommen werden
+        if "random_question" in self._data:
+            try:
+                self._random_question["choose"] = int(self._data["random_question"].get("choose", 0))
+                self._random_question["whole"] = int(self._data["random_question"].get("whole", -1))
+                self._random_question["takeout"] = int(self._data["random_question"].get("takeout", -1))
+            except:
+                raise Exception("This is a self programmed expansion. The Identifiers where not valid. Invalid Random Question.")
+
         # Network access in grading container?
         self._network_grading = self._data.get("network_grading", False)
 
@@ -59,9 +73,34 @@ class Task(object):
                     self._translations[lang] = gettext.NullTranslations()
 
         # Check all problems
+        from inginious.common.log import get_course_logger
+        get_course_logger("Custom").info(("Seed:", seed))
+        from random import Random
+        x = "{}#{}".format(taskid, seed)
+        rand = Random(x)
+
+        self._problems = []
+        temp_problems = []
+        for problemid in self._data['problems']:
+            temp_problems.append(self._create_task_problem(problemid, self._data['problems'][problemid], task_problem_types))
+
+        try:
+            if self._random_question["choose"] == 1 and temp_problems:
+                for i in range(self._random_question["takeout"]):
+                    chosen = rand.randint(0, len(temp_problems) - 1)
+                    self._problems.append(temp_problems.pop(chosen))
+            else:
+                self._problems = temp_problems
+        except Exception as error:
+            raise Exception("The problem set to permute has a flaw.")
+        '''
         self._problems = []
         for problemid in self._data['problems']:
             self._problems.append(self._create_task_problem(problemid, self._data['problems'][problemid], task_problem_types))
+        '''
+
+        from inginious.common.log import get_course_logger
+        get_course_logger("Custom").info(("HERE it goes in common tasks"))
 
         # Order
         self._order = int(self._data.get('order', -1))
@@ -105,6 +144,10 @@ class Task(object):
         """ Return the limits of this task """
         vals = self._hook_manager.call_hook('task_limits', course=self.get_course(), task=self, default=self._limits)
         return vals[0] if len(vals) else self._limits
+
+    def get_random_question(self):
+        vals = self._hook_manager.call_hook('task_random_question', course=self.get_course(), task=self, default=self._random_question)
+        return vals[0] if len(vals) else self._random_question
 
     def allow_network_access_grading(self):
         """ Return True if the grading container should have access to the network """

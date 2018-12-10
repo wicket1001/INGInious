@@ -3,18 +3,18 @@
 # This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
 # more information about the licensing of this file.
 import asyncio
-import logging
 import gettext
+import logging
 
-from inginious.agent import Agent, CannotCreateJobException
 from inginious import get_root_path
+from inginious.agent import Agent, CannotCreateJobException
 from inginious.common.course_factory import create_factories
 from inginious.common.messages import BackendNewJob, BackendKillJob
 from inginious.common.tasks_problems import MultipleChoiceProblem, MatchProblem
 
 
 class MCQAgent(Agent):
-    def __init__(self, context, backend_addr, friendly_name, concurrency, tasks_filesystem):
+    def __init__(self, context, backend_addr, friendly_name, concurrency, tasks_filesystem, user_manager=None, sac=None):
         """
         :param context: ZeroMQ context for this process
         :param backend_addr: address of the backend (for example, "tcp://127.0.0.1:2222")
@@ -26,7 +26,13 @@ class MCQAgent(Agent):
 
         # Create a course factory
         problem_types = {problem_type.get_type(): problem_type for problem_type in [MultipleChoiceProblem, MatchProblem]}
-        course_factory, _ = create_factories(tasks_filesystem, problem_types)
+
+        from inginious.common.log import get_course_logger
+        get_course_logger("Custom").info(("User m ", user_manager))
+
+        course_factory, _ = create_factories(tasks_filesystem, problem_types, user_manager=user_manager, sac=sac)  # TODO maybe add user_manager
+        from inginious.common.log import get_course_logger
+        get_course_logger("Custom").info(("After"))
         self.course_factory = course_factory
 
         # Init gettext
@@ -46,6 +52,8 @@ class MCQAgent(Agent):
         except asyncio.CancelledError:
             raise
         except Exception as e:
+            from inginious.common.log import get_course_logger
+            get_course_logger("Custom").info(("Error in new job (mcq_agent) ", e, msg.course_id, msg.task_id))
             self._logger.error("Task %s/%s not available on this agent", msg.course_id, msg.task_id)
             raise CannotCreateJobException("Task is not available on this agent")
 

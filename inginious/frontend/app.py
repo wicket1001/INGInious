@@ -188,13 +188,23 @@ def get_app(config):
                                                                    DisplayableMatchProblem]
     }
 
-    course_factory, task_factory = create_factories(fs_provider, default_problem_types, plugin_manager, WebAppCourse, WebAppTask)
-
     user_manager = UserManager(appli.get_session(), database, config.get('superadmins', []))
+
+    x = user_manager.session_username()
+    from inginious.common.log import get_course_logger
+    get_course_logger("Custom").info(("Before EVERYTHING", x))
+
+    from inginious.frontend.SuperAwsomeClass import SuperAwesomeClass
+    sac = SuperAwesomeClass('')
+
+    course_factory, task_factory = create_factories(fs_provider, default_problem_types, plugin_manager, WebAppCourse, WebAppTask, user_manager, sac)
+
+    from inginious.common.log import get_course_logger
+    get_course_logger("Custom").info(("USERMANAGER in app ", user_manager.session_username(), course_factory, task_factory))
 
     update_pending_jobs(database)
 
-    client = create_arch(config, fs_provider, zmq_context)
+    client = create_arch(config, fs_provider, zmq_context, user_manager, sac)
 
     lti_outcome_manager = LTIOutcomeManager(database, user_manager, course_factory)
 
